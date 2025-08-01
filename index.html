@@ -325,4 +325,62 @@
                 mobileMenu.classList.toggle('hidden');
             });
             // Close mobile menu when a link is clicked
-            document.querySelectorAll('#mobile-menu a, .nav-link'
+                        document.querySelectorAll('#mobile-menu a, .nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    // Use a small timeout to allow for scroll behavior to initiate
+                    setTimeout(() => {
+                         if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                         }
+                    }, 100);
+                });
+            });
+
+            // --- Fade-in on scroll animation ---
+            const faders = document.querySelectorAll('.fade-in');
+            const appearOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+            
+            // --- Hide header on scroll down, show on scroll up ---
+            let lastScrollTop = 0;
+            const header = document.getElementById('header');
+            window.addEventListener("scroll", function() {
+               let st = window.pageYOffset || document.documentElement.scrollTop;
+               if (st > lastScrollTop && st > 100) {
+                  // Scroll Down
+                  header.style.transform = 'translateY(-100%)';
+               } else {
+                  // Scroll Up
+                  header.style.transform = 'translateY(0)';
+               }
+               lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+            }, false);
+
+            // --- Formspree Setup ---
+            // To make the form work, you need to:
+            // 1. Create a new form on formspree.io
+            // 2. Set the endpoint to your email: shivanshshukla908@gmail.com
+            // 3. Get the form ID from the endpoint URL they provide. It will look like: https://formspree.io/f/{YOUR_FORM_ID}
+            // 4. Replace 'YOUR_FORM_ID' in the form's action attribute above with the ID you received.
+            const contactForm = document.getElementById('contact-form');
+            contactForm.setAttribute('action', 'https://formspree.io/f/mvojoqly'); // Example ID, replace with your actual one.
+        });
+    </script>
+</body>
+</html>
